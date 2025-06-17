@@ -1,43 +1,55 @@
 """
-Description:
-This script merges two different financial transaction datasets with differing structures:
-1. Credit Card Transactions (df1)
-2. Daily Transactions (df2)
+==============================================================================
+ Financial Transaction Data Merging Script
+==============================================================================
+Author: Phung Vuong(Victoria)
+Date: June 12, 2025
 
-The goal is to create a unified and clean dataset suitable for expense tracking, analysis, or machine learning.
+Purpose: This script merges two financial transaction datasets (credit card and
+#          daily household transactions) into a single consolidated dataset for
+#          analysis. The goal is to combine transaction data with standardized
+#          categories, customer IDs, and dates, and save the result as a CSV file.
+#
+# Data Sources:
+# - credit_card_transactions.csv: Contains 1,048,575 rows of credit card transactions
+#   with original customer IDs ranging from 0 to potentially higher values, including
+#   outliers (e.g., 1,048,575 to 1,049,963).
+# - Daily Household Transactions.csv: Contains 2,461 rows of daily household
+#   transactions with varying date formats and currency.
+#
+# Processing Steps:
+# 1. Load and preprocess the credit card dataset (df1):
+#    - Rename columns (e.g., 'trans_date_trans_time' to 'transaction_date', 'amt' to 'amount').
+#    - Convert transaction dates to datetime format.
+#    - Standardize category and subcategory names (lowercase, replace spaces with underscores).
+#    - Add a 'subcategory' column if missing, filling with 'other'.
+#    - Reassign customer IDs from 0 to 1,048,575, moving outliers to the end and renumbering.
 
-Key Steps:
-- Credit Card Dataset (df1):
-    - Contains customer_id as an unnamed column (renamed appropriately)
-    - Includes: trans_date_trans_time(format: YYYY-MM-DD HH:MM:SS), category, amt(in USD), 
-    - Does NOT include subcategories
-    - Does NOT include note
+# 2. Load and preprocess the household dataset (df2):
+#    - Rename columns (e.g., 'Date' to 'transaction_date', 'Amount' to 'amount').
+#    - Parse and standardize transaction dates with random time additions.
+#    - Convert amounts to USD (divide by 86).
+#    - Standardize category and subcategory names.
+#    - Assign new customer IDs from 1,048,576 to 1,051,036.
 
-- Daily Transaction Dataset (df2):
-    - Does NOT include customer_id (generated during merge)
-    - Includes: Date(format: DD/MM/YYYY HH:MM:SS) some have time and some not if not put in random time
-Category, Subcategory, Note, Amount(INR need to convert to USD)
-    
+# 3. Merge the datasets:
+#    - Concatenate df1 and df2, preserving original customer IDs.
+#    - Sort by transaction date for chronological order.
+#    - Reset the index for a clean sequence.
+#    - Select only relevant columns (customer_id, transaction_date, amount, category, subcategory).
 
-Data Standardization:
-- Common columns are aligned (renamed where needed)
-- Missing columns in either dataset are filled with `None` (e.g., subcategory in df1, note in df2)
-- All date columns are converted to `datetime` format
-- Category names are standardized to lowercase with underscores (e.g., 'Shopping Net' → 'shopping_net')
-
-Merging:
-- Rows from both datasets are concatenated into a single DataFrame
-- New `customer_id`s are generated consecutively for df2 to avoid overlap with df1
-- Final DataFrame includes:
-    ['customer_id', 'transaction_date', 'amount', 'category', 'subcategory', 'description', 'note']
-
-
-Output
-- Visualization of each dataset for all categories and amount (in USD) in histogram named df1_histogram.png, df2_histogram.png
-- Save the new csv file with merged data under /Users/panda/Documents/Work/Work_Main/spending_track/demo_project/dataset/after_merge
-
-Author: Phung Vuong
-Date: 2025-06-12
+# 4. Save the merged dataset to 'merged_transactions.csv' in the after_merge directory.
+#
+# Output:
+# - merged_transactions.csv: Contains 1,051,036 rows with customer IDs ranging from
+#   0 to 1,051,036, reflecting all transactions in chronological order.
+#
+# Notes:
+# - Visualizations (histograms) are generated for category-wise spending but are
+#   not included in this merge-specific script.
+# - Ensure the data_info and after_merge directories exist or will be created.
+# - The script assumes proper file paths and handles missing values by filling
+#   subcategories with 'other'.
 """
 import pandas as pd
 import numpy as np
@@ -214,3 +226,4 @@ print(" - df1_histogram.png")
 print(" - df2_histogram.png")
 print(" - merge.png")
 print("Files generated")
+print('Done')
