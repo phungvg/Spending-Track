@@ -43,7 +43,7 @@ Ensure Python 3.x is installed: python.org
 Run the main tracking script:
 
 ```bash
-python financial_tracking.py
+python OCR.py
 ```
 Or run the data merge script:
 
