@@ -39,7 +39,7 @@ Otherwise, install dependencies manually:
 pip install pandas matplotlib
 Ensure Python 3.x is installed: python.org
 ```
-### ▶️ 4. Run the Project
+### ▶️ 4. Run the Project (still working)
 Run the main tracking script:
 
 ```bash
