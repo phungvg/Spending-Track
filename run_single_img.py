@@ -8,7 +8,7 @@ def ocr_core(img):
     return text
 
 ##Load image
-img = cv2.imread('/Users/panda/Documents/Work/Work_Main/Dataset_collection/test_data/test_img/X51005568885.jpg')
+img = cv2.imread('/Users/panda/Documents/Work/Work_Main/Dataset_collection/Screenshot 2025-06-25 at 14.56.31.png')
 text = ocr_core(img)
 print(text)
 

@@ -8,6 +8,7 @@ import random
 # ---------------------------------------------------------------------------------------------------------------------------------------
 # df = pd.read_csv('/Users/panda/Documents/Work/Work_Main/spending_track/demo_project/dataset/before_merge/credit_card_transactions.csv')
 # df = pd.read_csv('/Users/panda/Documents/Work/Work_Main/spending_track/demo_project/dataset/before_merge/Daily Household Transactions.csv')
+# df = pd.read_csv('/Users/panda/Documents/Work/Work_Main/spending_track/demo_project/dataset/after_merge/merged_transactions.csv')
 df = pd.read_csv('/Users/panda/Documents/Work/Work_Main/spending_track/demo_project/dataset/after_merge/merged_transactions.csv')
 
 ##Check the dataset info
