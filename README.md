@@ -25,11 +25,11 @@ Then run:
 git lfs install
 git lfs pull
 ```
-## --> IT SHOULD BE ON YOUR DEVICE FROM THIS STEP <--
+## == IT SHOULD BE ON YOUR DEVICE FROM THIS STEP ==
 
-
-### 🛠️ 3. Install Dependencies
-The project requires Python libraries. If requirements.txt is included:
+## Needed Tools
+### 🛠️ Install Dependencies
+The project requires Python libraries, MATLAB. If requirements.txt is included:
 
 ```bash
 pip install -r requirements.txt
@@ -39,14 +39,13 @@ Otherwise, install dependencies manually:
 pip install pandas matplotlib
 Ensure Python 3.x is installed: python.org
 ```
-### ▶️ 4. Run the Project (still working)
-Run the main tracking script:
+### ▶️ Run the Project (Work in Progress)
 
-```bash
-python OCR.py
-```
-Or run the data merge script:
+- [x] **Auto-Crop Receipts/Images**  
+  - Best method: Morphology (region based shape detection)  
+  ```matlab
+  % Crop_Functions/testAutoCrop.m
+  testAutoCrop
 
-```bash
-python merge_data.py
-```
+- [x] **Text Detection on Cropped Regions(Working)**
+      - Extract and parse focused text areas
