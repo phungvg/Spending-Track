@@ -1,0 +1,104 @@
+%%Function return cropped image, bounding box takes value input image,
+%%varagin for handling different numbers of inputs without explicity defining them all
+function [croppedImage,boundingBox] = autoCrop(inputImage,varargin)
+
+% Syntax:
+%   [croppedImage, boundingBox] = autoCrop(inputImage)
+%   [croppedImage, boundingBox] = autoCrop(inputImage, 'Parameter', Value)
+%
+% Parameters:
+%   'Method'  Detection method:
+              % • 'canny'      — low-noise edge detection (not work)
+              % • 'sobel'      — gradient-based detection (not work)
+              % • 'morphology' — region-based detection via shape ops (work)
+              % • 'adaptive'   — local thresholding for uneven lightin (work)
+              % • 'superpixel'  — SLIC superpixels to group paper vs background
+              % • 'grabcut'     — coarse foreground/background separation
+ 
+         
+%   'Threshold' - Threshold value (0-1) for edge detection
+%   'MinArea' - Minimum area to consider as valid boundary
+%   'Padding' - Padding around detected boundary (pixels)
+%   'Debug' - Show intermediate steps (true/false)
+ 
+% Ex: [cropImg, box] = autoCrop(img, 'Method','adaptive','Padding',10);
+    % Valid options
+    %---------------------------
+    % 1) Parse inputs and set defaults
+    %---------------------------
+    validMethods = {'canny','sobel','morphology','adaptive'};
+    isValidMethod    = @(x) ischar(x) && any(strcmp(x, validMethods));
+    isValidThreshold = @(x) isnumeric(x) && isscalar(x) && x >= 0 && x <= 1;
+    isPositiveScalar = @(x) isnumeric(x) && isscalar(x) && x > 0;
+    isNonNegScalar   = @(x) isnumeric(x) && isscalar(x) && x >= 0;
+
+    % Parse input 
+    p = inputParser;
+    p.FunctionName = mfilename;
+    addpadding = 5; %add 5 extra pixel around in case over crop
+    threshold_value = 0.5; %from 0-1
+    min_area_value = 1500; %filter any below 1500 pixels
+    
+    addRequired(p, 'inputImage');
+    addParameter(p,'Method','adaptive', isValidMethod);
+    addParameter(p,'Threshold',threshold_value, isValidThreshold);
+    addParameter(p,'MinArea', min_area_value, isPositiveScalar);
+    addParameter(p, 'Padding', addpadding, isNonNegScalar);
+    addParameter(p, 'Debug', false, @islogical);
+    
+    parse(p, inputImage, varargin{:});
+    
+    method = p.Results.Method;
+    threshold = p.Results.Threshold;
+    minArea = p.Results.MinArea;
+    padding = p.Results.Padding;
+    debugMode = p.Results.Debug;
+    
+    %% Convert to Graysclale
+    %---------------------------
+    % 2) Convert to grayscale and normalize in-place
+    %---------------------------
+    if size(inputImage,3) == 3
+        grayImage = rgb2gray(inputImage);
+    else
+        %Already grayscale
+        grayImage = inputImage;
+    end
+
+    grayImage = mat2gray(grayImage); %convert to grayscale with values 0(black)-1(white)
+    % Convert to grayscale if needed
+    
+    %% Normalize image
+    %---------------------------
+    % 3) Detect main region mask using chosen method
+    %---------------------------
+    switch lower(method)
+        case 'canny'
+            boundaryMask = cannyBoundaryDetection(grayImage, threshold);
+        case 'sobel'
+            boundaryMask = sobelBoundaryDetection(grayImage, threshold);
+        case 'morphology'
+            boundaryMask = morphologyBoundaryDetection(grayImage, threshold);
+        case 'adaptive'
+            boundaryMask = adaptiveBoundaryDetection(grayImage, threshold);
+    end
+
+    % Post-process boundary mask
+    boundaryMask = postProcessBoundary(boundaryMask, minArea);
+    
+    % Find bounding box
+    boundingBox = findOptimalBoundingBox(boundaryMask, size(inputImage), padding);
+    
+    % Crop the image
+    croppedImage = inputImage(boundingBox(2):boundingBox(2)+boundingBox(4)-1, ...
+                             boundingBox(1):boundingBox(1)+boundingBox(3)-1, :);
+    
+    % Debug visualization
+    if debugMode
+        showDebugResults(inputImage, grayImage, boundaryMask, boundingBox, method);
+    end
+end
+            
+    
+    
+
