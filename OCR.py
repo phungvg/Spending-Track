@@ -1,7 +1,7 @@
 import os
 import pytesseract
 import pandas as pd
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from datetime import datetime
 from PIL import Image
 import cv2
@@ -20,6 +20,8 @@ dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 print("Running on -- ",dt_string)
 print("=== Python Receipt OCR ===")
 
+##Files
+output_path = '/Users/panda/Documents/Work/Work_Main/spending_track/ouput'
 ##-----------------------------------------------------------------------------------------------------------------------------
 """Functions"""
 ##-----------------------------------------------------------------------------------------------------------------------------
@@ -45,42 +47,18 @@ class ReceiptOCR:
             r'AMOUNT[:\s]*([0-9,]+\.?\d{0,2})',
             r'(\d+\.\d{2})\s*$
         ]
-    ##-----------------------------------------------------------------------------------------------------------------------------
-    """Preprocessing"""
-    ##-----------------------------------------------------------------------------------------------------------------------------
-    def preprocess_image(self,image_path):
-        ##Read image
-        img = cv2.imread(image_path)
 
-        ##Convert to grayscale (B&W --> remove color distractions)
-        gray_scale = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    ##Use the result from matlab after crop, save from output_path
+    def preprocess_image(self, image_path):
+        image = Image.open(image_path)
+        image = image.convert('RGB')
+        image.save(image_path)
 
-        #Apply noise reduction (remove small specks, dust,and other noise --> smooth out tiny details)
-        denoised = cv2.medianBlur(gray_scale, 3) ##3x3 kernel
-
-        ##Apply threshold to get binary image
-        ##Dont need the threshold value, only need the binary image
-        ## 0 = black, 255 = white
-        ## THRES_OTSU = automatic finds the best threshold value
-        _,thresh = cv2.threshold(denoised, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-
-        ##Resize image if too zoom out/small
-        height,width = thresh.shape
-        pixel = 1000
-        if height < pixel:
-            scale_factor = pixel/height
-            new_width = int(width * scale_factor)
-            new_height = int(height * scale_factor)
-            thresh = cv2.resize(threshm, (new_width, new_height), interpolation=cv2.INTER_CUBIC)
-
-        return thresh
-
-    ##-----------------------------------------------------------------------------------------------------------------------------
-    """Extract text"""
-    ##-----------------------------------------------------------------------------------------------------------------------------
+    ##Text extraction 
     def extract_text(self,image_path):
-    
-##-----------------------------------------------------------------------------------------------------------------------------
+        
+        
+##------------------------------------------------------------------------------------------------------------
 """For mannual entry"""
 ##-----------------------------------------------------------------------------------------------------------------------------
 """Set up for parsing"""

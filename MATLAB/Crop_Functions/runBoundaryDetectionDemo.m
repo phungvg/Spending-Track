@@ -1,39 +1,12 @@
 % function runBoundaryDetectionDemo()
 % % RUNBOUNDARYDETECTIONDEMO - Standalone demo for boundary detection
-%% Test 1: Basic usage with your image
-try
-    img = imread('/Users/panda/Documents/Work/Work_Main/Dataset_collection/Collection 1/Screenshot 2025-06-30 at 16.05.20.png');
-    fprintf('Image loaded successfully. Size: %dx%dx%d\n', size(img));
-    
-    % Basic auto-crop
-    [croppedImg, bbox] = autoCrop(img);
-    
-    % Display results
-    figure('Name', 'Basic Auto Crop', 'Position', [100, 100, 800, 400]);
-    subplot(1,2,1);
-    imshow(img);
-    hold on;
-    rectangle('Position', bbox, 'EdgeColor', 'r', 'LineWidth', 2);
-    title('Original with Detected Boundary');
-    
-    subplot(1,2,2);
-    imshow(croppedImg);
-    title('Cropped Result');
-    
-    fprintf('Bounding box: [x=%d, y=%d, w=%d, h=%d]\n', bbox);
-    
-catch ME
-    fprintf('Error loading image: %s\n', ME.message);
-    fprintf('Using synthetic image instead...\n');
-    img = createTestImage();
-end
 
-%% Test 2: Different methods comparison
+%% Test 1: Different methods comparison
 fprintf('\nTesting different detection methods...\n');
 
 % Test different methods
-methods = {'canny', 'sobel', 'morphology', 'adaptive'};
-
+% methods = {'canny', 'sobel', 'morphology', 'adaptive'};
+methods = {'morphology'};
 figure('Name', 'Method Comparison', 'Position', [200, 200, 1200, 800]);
 
 for i = 1:length(methods)
