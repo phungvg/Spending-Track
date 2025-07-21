@@ -47,5 +47,9 @@ Ensure Python 3.x is installed: python.org
   % Crop_Functions/testAutoCrop.m
   testAutoCrop
 
-- [x] **Text Detection on Cropped Regions(Working)**
-      - Extract and parse focused text areas
+- [ ] **Text Detection on Cropped Regions(Working)**
+  - Detect text region using MSER
+  ``` python
+  Text Detection/text_region.py
+  ```
+  -  Extract and parse focused text areas
